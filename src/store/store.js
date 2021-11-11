@@ -1,10 +1,11 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-function reducers (state = {}, action){
-    return state
-}
+import userSlice from "./slicers/userSlice";
+
 const rootReducer = {
-    reducers
+    userSlice
 }
 export default configureStore(
-    {reducer: combineReducers(rootReducer)}
+    {
+        reducer: combineReducers(rootReducer)
+    }
 )
