@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 
 function App() {
-  const user = useSelector(state =>  console.table(state));
+  const user = useSelector(state =>  state.userSlice);
   return(
     <div>
       Content
