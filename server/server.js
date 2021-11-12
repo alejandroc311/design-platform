@@ -1,8 +1,15 @@
+const cors = require("cors");
 const express = require("express");
 const app = express();
+app.use(cors());
+app.options("*", cors());
 
-app.get('/user/:userid', (req, res) => {
-    res.send({ message: 'Hello WWW!' });
+app.get("/", (req, res) => {
+    res.send({ message: '' })
+})
+
+app.get('/user', (req, res) => {
+    res.send({userid: "1234"});
 });
 
 app.listen(8080, () => {
