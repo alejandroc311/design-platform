@@ -1,4 +1,4 @@
-import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from "@reduxjs/toolkit";
 export const getMockups = createAsyncThunk("mockups/getMockups", async (id) => {
     const mockups = await fetch(
         "http://localhost:8080/mockups",
@@ -30,5 +30,7 @@ const mockupsSlice = createSlice({
     }
 });
 
-export const {selectId, setAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
+
+export const {selectAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
+export const  selectMockups = createSelector(selectAll, (mockups) => mockups);
 export default mockupsSlice.reducer
