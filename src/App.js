@@ -16,7 +16,7 @@ function App() {
       Content
       <button onClick={() => dispatch(getUser())}></button>
       Other Content
-      <button onClick={() => dispatch(getMockups("566sdsdd3er3r56544efe5"))}></button>
+      <button onClick={() => dispatch(getMockups("566sd56544efe5"))}></button>
     </div>
   );
 

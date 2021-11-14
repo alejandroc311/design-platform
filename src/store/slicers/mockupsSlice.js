@@ -26,7 +26,7 @@ const mockupsSlice = createSlice({
     reducers:{},
     extraReducers: (builder) => {
         builder
-            .addCase(getMockups.fulfilled, (state = {}, action) => {mockupsAdapter.addOne(state, action.payload)});    
+            .addCase(getMockups.fulfilled, mockupsAdapter.addOne);    
     }
 });
 
