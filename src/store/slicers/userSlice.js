@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 
 export const getUser = createAsyncThunk("user/getUser", async () => {
     const user = await fetch(
@@ -10,6 +10,7 @@ export const getUser = createAsyncThunk("user/getUser", async () => {
     console.log(user);
     return user;
 });
+
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -22,7 +23,7 @@ const userSlice = createSlice({
         
 
     }, 
-    //extraReducers is a createSlice parameter that takes a builder as its parameter. The builder can 
+    //extraReducers is a createSlice parameter that takes a builder object  as its parameter. The builder can 
     //take an action type and a callback that functions as a reducer as its parameters.
     // Since createAsyncThunk generates and dispatches a "fulfilled" action type when the "user/getUser" 
     //action type is dispatched (when getUser is called), we can listen for "getUser.fulfilled" inside 
