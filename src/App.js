@@ -1,22 +1,24 @@
 import './App.css';
+import _ from 'underscore';
 import { useSelector } from 'react-redux';
-import { getUser } from './store/slicers/userSlice';
-import { useDispatch } from 'react-redux';
-import { getMockups, selectMockups } from './store/slicers/mockupsSlice';
+import { getUser, selectUser } from './store/slicers/userSlice';
+import { useDispatch, shallowEqual} from 'react-redux';
+import { getMockups, selectMockups} from './store/slicers/mockupsSlice';
 
 
 function App() {
-  const state = useSelector(selectMockups)
-  const userid = useSelector(state =>  state.userSlice.id);
+  const mockups = useSelector(selectMockups, shallowEqual)
+  const user = useSelector(selectUser, shallowEqual);
   const dispatch = useDispatch();
-  console.table(state);
+  console.log(mockups);
+  console.log(user);
 
   return(
     <div>
       Content
       <button onClick={() => dispatch(getUser())}></button>
       Other Content
-      <button onClick={() => dispatch(getMockups("566sd56544efe5"))}></button>
+      <button onClick={() => dispatch(getMockups("1asa2133566sd5as"))}></button>
     </div>
   );
 
