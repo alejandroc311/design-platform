@@ -32,13 +32,13 @@ const userSlice = createSlice({
         builder
         .addCase(getUser.fulfilled, (state = {}, action) => {
             let {userid} = action.payload;
-            state.id = userid; state.isLoggedIn = true;
-            //return {...state, id: userid, isLoggedIn: true} 
+            //state.id = userid; state.isLoggedIn = true;
+            return {...state, id: userid, isLoggedIn: true} 
 
         })
         .addCase(getMockups.fulfilled, (state = {}, action) => {
-            state.mockups[action.payload.id] = action.payload;
-            //return {...state, mockups: {...state.mockups, [action.payload.id]: action.payload}}
+            //state.mockups[action.payload.id] = action.payload;
+            return {...state, mockups: {...state.mockups, [action.payload.id]: action.payload}}
         })
        
       }
