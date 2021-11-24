@@ -1,0 +1,48 @@
+:root{
+    box-sizing: border-box;
+    font-size: 16px;
+    font-family: 'Open Sans';
+    font-weight: 100;
+}
+.form-item{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    margin: 0.31250rem 0;
+}
+.email-input{
+    width: 16rem;
+    height: 1.625rem;
+    border-radius: 1rem;
+    border: solid gainsboro;
+    padding: 0.500rem;
+}
+.email-input:focus{
+    outline: none;
+    border-color: #000;
+}
+.password-input{
+    width: 16rem;
+    height: 1.625rem;
+    border-radius: 1rem;
+    border: solid gainsboro;
+    padding: 0.500rem;
+}
+.password-input:focus{
+    outline: none;
+    border-color: #000;
+}
+.login-form{
+    width:100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+button{
+    width: 15rem;
+    background-color: white;
+    border-radius:0.625rem;
+    border: solid gainsboro;
+}
