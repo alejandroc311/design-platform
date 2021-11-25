@@ -17,7 +17,7 @@ function LoginForm({onSubmit}){
         <form onSubmit={handleSubmit} className="login-form">
             <EmailInput userInput={email} onChange={handleInput}/>
             <PasswordInput userInput={password} onChange={handleInput}/>
-            <button type="submit">Sign In</button>
+            <button className="submit-button" type="submit">Sign In</button>
         </form>
     );
 }
