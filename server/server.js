@@ -6,7 +6,7 @@ const mysql = require("mysql2");
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "/",
     database: "Tropiweb_Platform"
 });
 const path = require("path");
@@ -34,7 +34,10 @@ app.post("/mockups", (req, res) => {
 });
 
 app.listen(8080, () => {
+    fs.readdirSync(usersDir).forEach((file) => {
+        console.log(file);
+    });
     console.log(usersDir);
     console.log('Application listening on port 8080!');
-    connection.connect((error) => error ? console.error(error) : console.log("Connected to DB", connection.threadId));
+    connection.connect((error) => error ? console.error(error) : console.log("Connected to DB on thread number: ", connection.threadId));
 });
