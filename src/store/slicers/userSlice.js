@@ -20,6 +20,10 @@ export const getUser = createAsyncThunk("user/getUser", async (loginData) => {
         console.error(error);
         return new Error("Error!", {cause: error})
     });
+    //If the server returns an error with "next(error)," 
+    //then login will be assigned a new error object.
+    //If login is an error object, the thunk returns null
+    //and will be handled by the "getUser.fulfilled" case.
     return (login instanceof Error ? null : login);
      
 });
@@ -36,11 +40,6 @@ const userSlice = createSlice({
     reducers: {
 
     }, 
-    //extraReducers is a createSlice parameter that takes a builder object  as its parameter. The builder can 
-    //take an action type and a callback that functions as a reducer as its parameters.
-    // Since createAsyncThunk generates and dispatches a "fulfilled" action type when the "user/getUser" 
-    //action type is dispatched (when getUser is called), we can listen for "getUser.fulfilled" inside 
-    //the builder.
     extraReducers: (builder) => {
         builder
         .addCase(getUser.fulfilled, (state = {}, action) => {
@@ -54,7 +53,6 @@ const userSlice = createSlice({
             }
         })
         .addCase(getMockups.fulfilled, (state = {}, action) => {
-            //state.mockups[action.payload.id] = action.payload;
             return {...state, mockups: {...state.mockups, [action.payload.id]: action.payload}}
         })
        
