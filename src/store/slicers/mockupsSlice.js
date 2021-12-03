@@ -1,5 +1,4 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from "@reduxjs/toolkit";
-import { getUser } from "./userSlice";
 export const getMockups = createAsyncThunk("mockups/getMockups", async (id) => {
     const mockups = await fetch(
         "http://localhost:8080/mockups",

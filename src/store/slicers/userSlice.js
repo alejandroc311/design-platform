@@ -1,14 +1,27 @@
 import { createSlice, createAsyncThunk, createSelector} from "@reduxjs/toolkit";
 import {getMockups} from "./mockupsSlice";
-export const getUser = createAsyncThunk("user/getUser", async () => {
-    const user = await fetch(
-        "http://localhost:8080/user", 
+export const getUser = createAsyncThunk("user/getUser", async (loginData) => {
+    let {email, password} = loginData;
+    let login = await fetch(
+        "http://localhost:8080/user",
         {
-            method: "GET"
-        })
-        .then( res => res.json());
-    console.log(user);
-    return user;
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        }
+    )
+    .then(res =>  res.json())
+    .catch(error =>  {
+        console.error(error);
+        return new Error("Error!", {cause: error})
+    });
+    return (login instanceof Error ? null : login);
+     
 });
 
 const userSlice = createSlice({
@@ -31,10 +44,14 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(getUser.fulfilled, (state = {}, action) => {
-            let {userid} = action.payload;
-            //state.id = userid; state.isLoggedIn = true;
-            return {...state, id: userid, isLoggedIn: true} 
-
+            let id, accountId, proyectId;
+            if (action.payload) {
+                ({body:{user:{id, accountId, proyectId}}} = action.payload);
+                return {...state, id, accountId, proyectId};
+            }
+            else {
+                return {...state};
+            }
         })
         .addCase(getMockups.fulfilled, (state = {}, action) => {
             //state.mockups[action.payload.id] = action.payload;

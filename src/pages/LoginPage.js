@@ -1,17 +1,24 @@
 import LoginForm from "../components/LoginForm";
 import "./../stylesheets/login-page.css"
 import { getUser } from "../store/slicers/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {Navigate} from "react-router-dom";
+import _ from 'underscore';
+import { selectUser } from "../store/slicers/userSlice";
 function LoginPage(){
+    const user = useSelector(selectUser, _.isEqual);
     const dispatch = useDispatch();
     function handleSubmit(email, password){
-        console.log(email, password);
+        dispatch(getUser({email, password}));
     }
-
+    console.log(user);
     return (
-        <div>
-            <LoginForm onSubmit={handleSubmit}/>
-        </div>
+        user.id == "" ? 
+            <div>
+                <LoginForm onSubmit={handleSubmit}/>
+            </div>
+        : 
+            <Navigate to="/app"/> 
     );
 }
 

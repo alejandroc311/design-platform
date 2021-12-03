@@ -10,6 +10,7 @@ ReactDOM.render(
       <Router>
         <Routes>
           <Route exact path="/" element={<LoginPage/>}/>
+          <Route path="/app" element={<App/>}/>
         </Routes>
       </Router>
     </Provider>

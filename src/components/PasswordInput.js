@@ -1,4 +1,5 @@
-function PasswordInput({userInput, onChange}){
+function PasswordInput({onChange, userInput}){
+
     function handleChange({target:{value, name}}){
         onChange(value, name);
     }
