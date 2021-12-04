@@ -3,7 +3,7 @@ function EmailInput({onChange, userInput}) {
     function handleChange({target: {value, name}}){
         onChange(value, name);
     }
-
+    
     return (
         <div className="form-item">
             <label htmlFor="email-input">Email</label>

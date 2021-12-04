@@ -2,6 +2,7 @@ import { useState } from "react";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
 function SignupForm({onSubmit}){
+    
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,7 +16,7 @@ function SignupForm({onSubmit}){
         setEmail(""); setPassword("");
     }
     return(
-        <form onSubmit={handleSubmit}>
+        <form className="signup-form" onSubmit={handleSubmit}>
             <EmailInput userInput={email} onChange={handleInput}/>
             <PasswordInput userInput={password} onChange={handleInput}/>
             <button className="submit-button" type="submit">Sign Up</button>
