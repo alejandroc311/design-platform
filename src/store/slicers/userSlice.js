@@ -53,7 +53,7 @@ const userSlice = createSlice({
             }
         })
         .addCase(getMockups.fulfilled, (state = {}, action) => {
-            return {...state, mockups: {...state.mockups, [action.payload.id]: action.payload}}
+            return {...state, mockups: {...state.mockups, ...action.payload}}
         })
        
       }

@@ -23,7 +23,7 @@ function App() {
       Content
       <button onClick={() => dispatch(getUser())}></button>
       Other Content
-      <button onClick={() => dispatch(getMockups("109"))}></button>
+      <button onClick={() => dispatch(getMockups("1"))}></button>
     </div>
   );
 

@@ -1,36 +1,35 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from "@reduxjs/toolkit";
-export const getMockups = createAsyncThunk("mockups/getMockups", async (id) => {
+export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectId) => {
     const mockups = await fetch(
         "http://localhost:8080/mockups",
         {
             method: "POST",
             body: JSON.stringify({
-                id,
-                proyectid: "123445"
+                proyectId
             }),
             headers:{
                 "Content-Type": "application/json"
             }
         })
         .then( response => response.json());
-    console.log(mockups);
-    return mockups.body
+    console.log(mockups.mockups);
+    return mockups.mockups;
 });
 const mockupsAdapter = createEntityAdapter();
 const initialState = mockupsAdapter.getInitialState({
     status: "idle"
 }); 
-export const {selectAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
-export const  selectMockups = createSelector(selectAll, (mockups) => mockups);
 const mockupsSlice = createSlice({
     name: "mockups",
     initialState,
     reducers:{},
     extraReducers: (builder) => {
-        builder.addCase(getMockups.fulfilled, mockupsAdapter.addOne)
+        builder.addCase(getMockups.fulfilled, (state = {}, {payload}) => {
+            mockupsAdapter.addMany(state, payload)});
     }    
 });
 
 
-
-export default mockupsSlice.reducer
+export const {selectAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
+export const  selectMockups = createSelector(selectAll, (mockups) => mockups);
+export default mockupsSlice.reducer;

@@ -17,6 +17,7 @@ function SignupForm({onSubmit}){
     }
     return(
         <form className="signup-form" onSubmit={handleSubmit}>
+            <h1>Sign Up</h1>
             <EmailInput userInput={email} onChange={handleInput}/>
             <PasswordInput userInput={password} onChange={handleInput}/>
             <button className="submit-button" type="submit">Sign Up</button>
