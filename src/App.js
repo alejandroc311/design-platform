@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { getUser, selectUser } from './store/slicers/userSlice';
 import { useDispatch, shallowEqual, } from 'react-redux';
 import { getMockups, selectMockups} from './store/slicers/mockupsSlice';
+import Carousel from './components/Carousel';
 
 
 function App() {
@@ -17,13 +18,34 @@ function App() {
   const dispatch = useDispatch();
   console.log(mockups);
   console.log(user);
+  function displayMockups(){
+   return(
+     mockups.length > 0 ? 
+      <div className="carousel-wrapper">
+        <Carousel imageUrls={mockupsUrls}>
+  
+        </Carousel>
+      </div>
+    :
+      <div>
 
+      </div>
+      
+  );
+}
+  let mockupsUrls = mockups.map(({src}) => src);
+  let array = [1, 2, 3, 4];
   return(
     <div>
       Content
       <button onClick={() => dispatch(getUser())}></button>
       Other Content
       <button onClick={() => dispatch(getMockups("1"))}></button>
+      {
+       displayMockups() 
+      }
+      
+      
     </div>
   );
 

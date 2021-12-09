@@ -53,3 +53,33 @@
     border-radius:0.625rem;
     border: solid gainsboro;
 }
+.carousel-wrapper{
+    padding: 0px 30px;
+    margin: 0px auto;
+}
+.image-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30rem !important;
+    height: 30rem !important;
+    background-color: honeydew;
+    border:solid;
+    border-color: hotpink;
+
+}
+.image-card img{
+    width: 25rem;
+    height: 25rem;
+}
+
+.glider {
+    overflow: hidden;
+  }
+.glider-next{
+    margin-right:-1rem;
+}
+.glider-prev{
+    margin-left: -1rem;
+}

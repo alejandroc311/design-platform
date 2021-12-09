@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
 });
 app.use(cors());
 app.use(express.json());
-app.use(express.static(usersDir));
+app.use("/images", express.static(usersDir));
 app.options("*", cors());
 
 const getUser = (email) => new Promise((resolve, reject) => {
@@ -79,7 +79,7 @@ app.post('/createUser', async (req, res, next) => {
                 '',
                 [email, password],
                 (error, results) => {
-                    
+
                 }
             );
         }
