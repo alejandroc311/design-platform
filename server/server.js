@@ -5,6 +5,7 @@ const app = express();
 const mysql = require("mysql2");
 const path = require("path");
 const usersDir = path.join(__dirname, "public/users");
+const jwt = require('jsonwebtoken');
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -69,6 +70,7 @@ const getMockups = (proyectId) => new Promise((resolve, reject) => {
         console.error("Error on DB Connection", error);
     }
 });
+
 app.post('/createUser', async (req, res, next) => {
     let {body:{email, password}} = req;
     let doesUserExist;
@@ -101,17 +103,24 @@ app.post('/user', async (req, res, next) => {
     let {body:{email, password}} = req; 
     let user;
     try {
-        [{user:{hashedPassword}}] = await getUser(email, password);
-        if (password !== hashedPassword) throw new Error("Error on Authentication", {cause: "Wrong Password"}); 
+        [user] = await getUser(email, password);
+        let {hashedPassword} = user;
+        if (password !== hashedPassword) throw new Error("Error on Authentication", {cause: "Wrong Password"});
     } 
     catch (error) {
         console.error("Error on Login: ", error);
         next(error);
     }
     finally {
+        let accessToken = jwt.sign(
+            {data: "secret"},
+            "secret",
+            {expiresIn: 60 * 60}
+        ); 
         res.json({
             body:{
-                user
+                user,
+                accessToken
             }
         });
     }
@@ -119,9 +128,14 @@ app.post('/user', async (req, res, next) => {
 
 app.post("/mockups", async (req, res, next) => {
     const {body:{proyectId}} = req;
-    let mockups; 
+    let [, token] = req.headers.authorization.split(' ');
+    console.log(token);
+    let mockups, isUserAuthenticated; 
     try {
         mockups = await getMockups(proyectId);
+        isUserAuthenticated = jwt.verify(token, "secret", (err) => {
+            if (err) throw err; 
+        });
     }
     catch (error) {
         console.error(error);
@@ -132,7 +146,6 @@ app.post("/mockups", async (req, res, next) => {
             mockups    
         });
     }
-    
 });
 
 app.listen(8080, async () => {

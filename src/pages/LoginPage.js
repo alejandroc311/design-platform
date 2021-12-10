@@ -18,7 +18,7 @@ function LoginPage(){
                 <LoginForm onSubmit={handleSubmit}/>
             </div>
         : 
-            <Navigate to="/app"/> 
+            <Navigate to="/profile"/> 
     );
 }
 

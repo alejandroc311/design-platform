@@ -8,7 +8,8 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
                 proyectId
             }),
             headers:{
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + `${localStorage.getItem("platform-token")}`
             }
         })
         .then( response => response.json());

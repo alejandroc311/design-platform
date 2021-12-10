@@ -42,11 +42,13 @@ const userSlice = createSlice({
     }, 
     extraReducers: (builder) => {
         builder
-        .addCase(getUser.fulfilled, (state = {}, action) => {
-            let id, accountId, proyectId;
-            if (action.payload) {
-                ({body:{user:{id, accountId, proyectId}}} = action.payload);
-                return {...state, id, accountId, proyectId};
+        .addCase(getUser.fulfilled, (state = {}, {payload}) => {
+            let id, accountId, proyectId, accessToken;
+            console.log(payload)
+            if (payload) {
+                ({body:{user:{id, accountId, proyectId}, accessToken}} = payload);
+                localStorage.setItem("platform-token", accessToken);
+                return {...state, id, accountId, proyectId, isLoggedIn:true};
             }
             else {
                 return {...state};
