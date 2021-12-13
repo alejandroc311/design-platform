@@ -28,17 +28,26 @@ export const getUser = createAsyncThunk("user/getUser", async (loginData) => {
      
 });
 
+const initialState = {
+    id:"",
+    proyectId: "",
+    accountId: "",
+    mockups: {},
+    isLoggedIn: false,
+};
+
 const userSlice = createSlice({
     name: "user",
-    initialState: {
-        id:"",
-        proyectId: "",
-        accountId: "",
-        mockups: {},
-        isLoggedIn: false,
-    },
+    initialState,
     reducers: {
-
+        logout: (state) => {
+            localStorage.removeItem("platform-token");
+            return {...state, id: "", proyectId: "", accountId: "", mockups: {}, isLoggedIn: false};
+        },
+        setUser: (state, {payload}) => {
+            const {id, accountId, proyectId} = payload;
+            return {...state, id, accountId, proyectId, isLoggedIn: true};
+        }
     }, 
     extraReducers: (builder) => {
         builder
@@ -48,17 +57,19 @@ const userSlice = createSlice({
             if (payload) {
                 ({body:{user:{id, accountId, proyectId}, accessToken}} = payload);
                 localStorage.setItem("platform-token", accessToken);
-                return {...state, id, accountId, proyectId, isLoggedIn:true};
+                return {...state, id, accountId, proyectId, isLoggedIn: true};
             }
             else {
                 return {...state};
             }
         })
-        .addCase(getMockups.fulfilled, (state = {}, action) => {
-            return {...state, mockups: {...state.mockups, ...action.payload}}
+        .addCase(getMockups.fulfilled, (state = {}, {payload}) => {
+            return {...state, mockups: {...state.mockups, ...payload}}
         })
        
       }
 });
+
 export const selectUser = createSelector((state) => state.userSlice, (user) => user);
+export const {logout, setUser} = userSlice.actions;
 export default userSlice.reducer;

@@ -16,7 +16,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/images", express.static(usersDir));
 app.options("*", cors());
-
 const getUser = (email) => new Promise((resolve, reject) => {
     try {
         connection.execute(
@@ -31,7 +30,6 @@ const getUser = (email) => new Promise((resolve, reject) => {
     catch (error) {
         console.error("Error on DB connection", error);
     }
-    
 });
 const checkForUser = (email) => new Promise((resolve, reject) => {
     try {
@@ -72,7 +70,7 @@ const getMockups = (proyectId) => new Promise((resolve, reject) => {
 });
 
 app.post('/createUser', async (req, res, next) => {
-    let {body:{email, password}} = req;
+    const {body:{email, password}} = req;
     let doesUserExist;
     try {
         doesUserExist = await checkForUser(email);
@@ -99,12 +97,36 @@ app.post('/createUser', async (req, res, next) => {
     }
 
 });
+app.post('/authenticateUser', async (req, res, next) => {
+    let token, user, email;
+    try{
+        [, token] = req.headers.authorization.split(' ');
+        jwt.verify(token, "secret", (err, decoded) => {
+            if (err) throw err;
+            console.log(decoded);
+            ({email} = decoded);
+        });
+        [user] = await getUser(email);
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+    finally {
+        res.json({
+            body:{
+                user
+            }
+        });
+    }
+});
+
 app.post('/user', async (req, res, next) => {
-    let {body:{email, password}} = req; 
+    const {body:{email, password}} = req; 
     let user;
     try {
-        [user] = await getUser(email, password);
-        let {hashedPassword} = user;
+        [user] = await getUser(email);
+        const {hashedPassword} = user;
         if (password !== hashedPassword) throw new Error("Error on Authentication", {cause: "Wrong Password"});
     } 
     catch (error) {
@@ -112,8 +134,14 @@ app.post('/user', async (req, res, next) => {
         next(error);
     }
     finally {
-        let accessToken = jwt.sign(
-            {data: "secret"},
+        const {id, email, proyectId, accountId} = user; 
+        const accessToken = jwt.sign(
+            {
+                accountId,
+                email, 
+                id, 
+                proyectId
+            },
             "secret",
             {expiresIn: 60 * 60}
         ); 
@@ -128,7 +156,7 @@ app.post('/user', async (req, res, next) => {
 
 app.post("/mockups", async (req, res, next) => {
     const {body:{proyectId}} = req;
-    let [, token] = req.headers.authorization.split(' ');
+    const [, token] = req.headers.authorization.split(' ');
     console.log(token);
     let mockups, isUserAuthenticated; 
     try {

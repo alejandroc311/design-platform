@@ -8,13 +8,13 @@ import { Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import store from './store/store.js';
 import PrivateRoute from './components/PrivateRoute';
 import ProfilePage from './pages/ProfilePage';
-
+import LandingPage from './pages/LandingPage';
 ReactDOM.render(
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route exact path="/" element={<LoginPage/>}/>
-          <Route path="/app" element={<App/>}/>
+          <Route exact path="/" element={<LandingPage/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
           <Route path="/signup" element={<SignupPage/>}/>
           <Route path="/profile" element={
             <PrivateRoute>

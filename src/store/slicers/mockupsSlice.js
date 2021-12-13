@@ -12,9 +12,14 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
                 "Authorization": "Bearer " + `${localStorage.getItem("platform-token")}`
             }
         })
-        .then( response => response.json());
-    console.log(mockups.mockups);
-    return mockups.mockups;
+        .then( response => response.json())
+        .catch(error => {
+            console.error(error);
+            return new Error("Error!", error);
+        });
+    return (
+        mockups instanceof Error ? null : mockups.mockups
+    );
 });
 const mockupsAdapter = createEntityAdapter();
 const initialState = mockupsAdapter.getInitialState({
@@ -26,7 +31,8 @@ const mockupsSlice = createSlice({
     reducers:{},
     extraReducers: (builder) => {
         builder.addCase(getMockups.fulfilled, (state = {}, {payload}) => {
-            mockupsAdapter.addMany(state, payload)});
+            if (payload) mockupsAdapter.addMany(state, payload);
+        });
     }    
 });
 

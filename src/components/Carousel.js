@@ -17,7 +17,7 @@ function Carousel({imageUrls}){
             draggable
             hasArrows
             hasDots
-            slidesToShow={3}
+            slidesToShow={2}
             slidesToScroll={1}
             scrollToSlide={1}
         >

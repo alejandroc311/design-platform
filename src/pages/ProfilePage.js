@@ -5,13 +5,15 @@ import { useEffect } from "react";
 import { getMockups } from "../store/slicers/mockupsSlice";
 import { useDispatch } from "react-redux";
 import { selectUser } from "../store/slicers/userSlice";
+import { logout } from "../store/slicers/userSlice";
 import _ from 'underscore';
 function ProfilePage() {
     const dispatch = useDispatch();
     const mockups = useSelector(selectMockups, shallowEqual);
     const user = useSelector(selectUser, _.isEqual)
-    let {id} = user;
-    let mockupsUrls = mockups.map(({src}) => src);
+    const {proyectId} = user;
+    console.log(mockups);
+    const mockupsUrls = mockups.map(({src}) => src);
     function displayMockups(){
         return(
           mockups.length > 0 ? 
@@ -25,7 +27,7 @@ function ProfilePage() {
         );
     }
     useEffect(() => {
-        dispatch(getMockups(id))
+        dispatch(getMockups(proyectId))
     }, []);    
     return(
         <div>
@@ -35,7 +37,7 @@ function ProfilePage() {
             <h3>
                 Welcome, User No.{user.id}!
             </h3>
-            <button id="logout-button" type="submit">Logout</button>
+            <button id="logout-button" type="submit" onClick={() => dispatch(logout())} >Logout</button>
             {displayMockups()}
         </div>
         
