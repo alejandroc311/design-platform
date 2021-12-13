@@ -78,8 +78,10 @@ app.post('/createUser', async (req, res, next) => {
             connection.execute(
                 'INSERT INTO `Users` (email, hashedPassword) VALUES (?, ?)',
                 [email, password],
-                (error) => {
+                (error, results) => {
                     if (error) throw error;
+                    const {insertId} = results;
+                    fs.mkdirSync(usersDir + `${"/"+insertId}`, {recursive: true});
                 }   
             );
         }
@@ -90,10 +92,8 @@ app.post('/createUser', async (req, res, next) => {
     }
     finally {
         res.json({
-            body:{
-                
-            }
-        });
+            Success: "User Created"
+        })
     }
 });
 app.post('/authenticateUser', async (req, res, next) => {
@@ -177,5 +177,4 @@ app.post("/mockups", async (req, res, next) => {
 
 app.listen(8080, async () => {
         connection.connect((error) => error ? console.error("Error on line 140:", error) : console.log("Connected to DB on thread number: ", connection.threadId));
-        let mockups = await getMockups("1"); console.log(mockups);
     });

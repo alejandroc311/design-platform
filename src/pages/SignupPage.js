@@ -7,7 +7,7 @@ function SignupPage(){
     const dispatch = useDispatch();
     const navigate = useNavigate();
     async function handleSubmit(email, password){
-        let createUser = await fetch(
+        const createUser = await fetch(
             "http://localhost:8080/createUser",
             {
                 method: "POST",
@@ -22,8 +22,7 @@ function SignupPage(){
         )
         .then(res => res.json())
         .catch(error => new Error("Error on Sign-up", {cause:error}));
-        console.log(createUser);
-        createUser instanceof Error ? dispatch(throwError({error: "SIGN_UP_ERROR"})) : navigate("/app")
+        createUser instanceof Error ? dispatch(throwError({error: "SIGN_UP_ERROR"})) : navigate("/login")
     }
     return(
         <SignupForm onSubmit={handleSubmit}/>
