@@ -76,11 +76,11 @@ app.post('/createUser', async (req, res, next) => {
         doesUserExist = await checkForUser(email);
         if (doesUserExist === false) {
             connection.execute(
-                '',
+                'INSERT INTO `Users` (email, hashedPassword) VALUES (?, ?)',
                 [email, password],
-                (error, results) => {
-
-                }
+                (error) => {
+                    if (error) throw error;
+                }   
             );
         }
     }
@@ -95,7 +95,6 @@ app.post('/createUser', async (req, res, next) => {
             }
         });
     }
-
 });
 app.post('/authenticateUser', async (req, res, next) => {
     let token, user, email;

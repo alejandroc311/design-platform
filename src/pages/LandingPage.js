@@ -30,9 +30,9 @@ function LandingPage(){
                 navigate("/login");
             }
             else {
-                const {body:{ user: {id, accountId, proyectId}}} =  checkUser
+                const {body:{ user: {id, accountId, proyectId}}} =  checkUser;
                 dispatch(setUser({id, accountId, proyectId}));
-                navigate("/profile")
+                navigate("/profile");
             }
         }
         else {
@@ -40,14 +40,10 @@ function LandingPage(){
         }
     }, 
     []);
-
     return(
         <div>
-
+              
         </div>
     );
-
-
 }
-
 export default LandingPage; 

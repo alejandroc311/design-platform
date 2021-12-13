@@ -23,7 +23,11 @@ function ProfilePage() {
              </Carousel>
            </div>
          :
-           <div></div>
+           <div>
+               <h3>
+                   Oops! Still no mockups for this proyect ... 
+               </h3>
+           </div>
         );
     }
     useEffect(() => {

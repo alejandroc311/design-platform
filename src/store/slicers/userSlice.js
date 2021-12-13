@@ -25,7 +25,6 @@ export const getUser = createAsyncThunk("user/getUser", async (loginData) => {
     //If login is an error object, the thunk returns null
     //and will be handled by the "getUser.fulfilled" case.
     return (login instanceof Error ? null : login);
-     
 });
 
 const initialState = {
