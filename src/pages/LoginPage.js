@@ -11,9 +11,8 @@ function LoginPage(){
     function handleSubmit(email, password){
         dispatch(getUser({email, password}));
     }
-    console.log(user);
     return (
-        user.id == "" ? 
+        user.id === "" ? 
             <div>
                 <LoginForm onSubmit={handleSubmit}/>
             </div>

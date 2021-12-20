@@ -1,4 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from "@reduxjs/toolkit";
+import { logUserOut } from "./userSlice";
 export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectId) => {
     const mockups = await fetch(
         "http://localhost:8080/mockups",
@@ -9,7 +10,7 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
             }),
             headers:{
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + `${localStorage.getItem("platform-token")}`
+                "Authorization": `Bearer ${localStorage.getItem("platform-token")}`
             }
         })
         .then( response => response.json())
@@ -24,19 +25,27 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
 const mockupsAdapter = createEntityAdapter();
 const initialState = mockupsAdapter.getInitialState({
     status: "idle"
-}); 
+});
+export const {selectAll, removeAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
+export const  selectMockups = createSelector(selectAll, (mockups) => mockups);
 const mockupsSlice = createSlice({
     name: "mockups",
     initialState,
-    reducers:{},
+    reducers:{
+
+    },
     extraReducers: (builder) => {
-        builder.addCase(getMockups.fulfilled, (state = {}, {payload}) => {
-            if (payload) mockupsAdapter.addMany(state, payload);
+        builder
+        .addCase(getMockups.fulfilled, (state = {}, {payload}) => {
+            if (payload) {
+                mockupsAdapter.addMany(state, payload);
+            }
+        });
+        builder.addCase("user/logUserOut/fulfilled", (state = {}) => {
+            console.log("inside lgout part 2");
+            mockupsAdapter.removeAll(state);
         });
     }    
 });
 
-
-export const {selectAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
-export const  selectMockups = createSelector(selectAll, (mockups) => mockups);
 export default mockupsSlice.reducer;

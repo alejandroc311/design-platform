@@ -1,0 +1,10 @@
+.star-grid{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.star-button{
+    background-color: transparent;
+    border: none;
+}

@@ -10,7 +10,8 @@ const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "gohanssj2",
-    database: "Tropiweb_Platform"
+    database: "Tropiweb_Platform",
+    multipleStatements: true
 });
 app.use(cors());
 app.use(express.json());
@@ -66,6 +67,7 @@ const getMockups = (proyectId) => new Promise((resolve, reject) => {
     }
     catch (error) {
         console.error("Error on DB Connection", error);
+        reject(new Error("Error on DB", error));
     }
 });
 
@@ -76,12 +78,13 @@ app.post('/createUser', async (req, res, next) => {
         doesUserExist = await checkForUser(email);
         if (doesUserExist === false) {
             connection.execute(
-                'INSERT INTO `Users` (email, hashedPassword) VALUES (?, ?)',
-                [email, password],
+                'CALL SP_CREATE_USER(?, ?); SELECT id FROM Users WHERE `email` = ?',
+                [email, password,  email],
                 (error, results) => {
                     if (error) throw error;
-                    const {insertId} = results;
-                    fs.mkdirSync(usersDir + `${"/"+insertId}`, {recursive: true});
+                    console.log(results);
+                    //const {insertId} = results;
+                    //fs.mkdirSync(`${usersDir}${"/" + insertId}`, {recursive: true});
                 }   
             );
         }
@@ -112,9 +115,12 @@ app.post('/authenticateUser', async (req, res, next) => {
         next(error);
     }
     finally {
+        const {id, accountId, proyectId} = user;
         res.json({
             body:{
-                user
+                id,
+                accountId,
+                proyectId,
             }
         });
     }
@@ -157,12 +163,12 @@ app.post("/mockups", async (req, res, next) => {
     const {body:{proyectId}} = req;
     const [, token] = req.headers.authorization.split(' ');
     console.log(token);
-    let mockups, isUserAuthenticated; 
+    let mockups
     try {
-        mockups = await getMockups(proyectId);
-        isUserAuthenticated = jwt.verify(token, "secret", (err) => {
+        jwt.verify(token, "secret", (err) => {
             if (err) throw err; 
         });
+        mockups = await getMockups(proyectId);
     }
     catch (error) {
         console.error(error);

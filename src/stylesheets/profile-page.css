@@ -1,0 +1,16 @@
+.comment-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.comment-textarea{
+    width: 30rem;
+    height: 10rem;
+    margin-bottom: 1rem;
+}
+.comment-textarea:focus{
+    outline: none;
+    border-color: #000;
+}
