@@ -83,11 +83,8 @@ app.post('/createUser', async (req, res, next) => {
                 [email, password],
                 (error, results) => {
                     if (error) throw error;
-                    console.log(results);
                     const [, [output]] = results; const {dirNum} = output;
-                    console.log(output, dirNum);
-                    //const {insertId} = results;
-                    //fs.mkdirSync(`${usersDir}${"/" + insertId}`, {recursive: true});
+                    fs.mkdirSync(`${usersDir}${"/" + dirNum}`, {recursive: true});
                 }   
             );
         }
