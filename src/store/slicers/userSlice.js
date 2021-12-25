@@ -63,9 +63,6 @@ const userSlice = createSlice({
                 localStorage.setItem("platform-token", accessToken);
                 return {...state, id, accountId, proyectId, isLoggedIn: true};
             }
-            else {
-                return {...state};
-            }
         })
         .addCase(getMockups.fulfilled, (state = {}, {payload}) => {
             return {...state, mockups: {...state.mockups, ...payload}}
@@ -75,8 +72,6 @@ const userSlice = createSlice({
                 const {body:{id, proyectId, accountId}} = payload;
                 console.log(payload);
                 return {...state, id, proyectId, accountId, isLoggedIn: true};
-            } else {
-                return {...state};
             }
         })
         .addCase(logUserOut.fulfilled, (state = {}) => {

@@ -1,13 +1,18 @@
 import "glider-js/glider.min.css";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Glider from "react-glider";
+import { shallowEqual, useSelector } from "react-redux";
+import { selectMockups } from "../store/slicers/mockupsSlice";
+import _ from 'underscore';
 import StarRatingComponent from "./StarRatingComponent";
-function Carousel({imageUrls}){
-    let imageCards = imageUrls.map((imageUrl) => {
+function Carousel(){
+    const mockups = useSelector(selectMockups, _.isEqual);
+    let imageCards = mockups.map((mockup) => {
+        const {src, rating, id} = mockup;
         return(
-            <div key={imageUrl} className="slide image-card">
-               <img src={imageUrl}></img>
-                <StarRatingComponent/>
+            <div key={src} className="slide image-card">
+               <img src={src}></img>
+                <StarRatingComponent mockupId={id} score={rating}/>
             </div>
         );
     });

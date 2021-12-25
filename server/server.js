@@ -10,8 +10,8 @@ const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "gohanssj2",
-    database: "Tropiweb_Platform",
-    multipleStatements: true
+    multipleStatements: true,
+    database: "Tropiweb_Platform"
 });
 app.use(cors());
 app.use(express.json());
@@ -73,16 +73,19 @@ const getMockups = (proyectId) => new Promise((resolve, reject) => {
 
 app.post('/createUser', async (req, res, next) => {
     const {body:{email, password}} = req;
+    console.log(email, password);
     let doesUserExist;
     try {
         doesUserExist = await checkForUser(email);
         if (doesUserExist === false) {
-            connection.execute(
-                'CALL SP_CREATE_USER(?, ?); SELECT id FROM Users WHERE `email` = ?',
-                [email, password,  email],
+            connection.query(
+                'CALL SP_CREATE_USER(?, ?, @return); SELECT @return AS dirNum;',
+                [email, password],
                 (error, results) => {
                     if (error) throw error;
                     console.log(results);
+                    const [, [output]] = results; const {dirNum} = output;
+                    console.log(output, dirNum);
                     //const {insertId} = results;
                     //fs.mkdirSync(`${usersDir}${"/" + insertId}`, {recursive: true});
                 }   
@@ -178,6 +181,61 @@ app.post("/mockups", async (req, res, next) => {
         res.json({
             mockups    
         });
+    }
+});
+app.post("/rating", (req, res, next) => {
+    let {body: {id, score}} = req;
+    score === "" ? score = 0 : score;
+    const [, token] = req.headers.authorization.split(' ');
+    try {
+        jwt.verify(token, "secret", (err) => {
+            if (err) throw err; 
+        });
+        connection.execute(
+            "UPDATE Mockups SET rating = ? WHERE id = ?",
+            [score, id],
+            (error, results) => {
+                if (error) throw error;
+                console.log(results);
+            }
+        );
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+    finally {
+        res.json({
+            result: "success"
+        })
+    }
+});
+
+app.post("/comment", (req, res, next) => {
+    let {body:{proyectId, comment}} = req;
+    console.log(proyectId, comment);
+    const [, token] = req.headers.authorization.split(' ');
+    try {
+        jwt.verify(token, "secret", (err) => {
+            if (err) throw err; 
+        });
+        connection.execute(
+            "INSERT INTO Comments(proyectId, dateCreated, comment) VALUES(?, NOW(), ?)",
+            [proyectId, comment],
+            (error, results) => {
+                if (error) throw error;
+                console.log(results);
+            }
+        );
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+    finally {
+        res.json({
+            result: "success"
+        })
     }
 });
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from "@reduxjs/toolkit";
-import { logUserOut } from "./userSlice";
+
 export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectId) => {
     const mockups = await fetch(
         "http://localhost:8080/mockups",
@@ -22,11 +22,34 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
         mockups instanceof Error ? null : mockups.mockups
     );
 });
-const mockupsAdapter = createEntityAdapter();
+export const rating = createAsyncThunk("mockups/rating", async (ratingInfo) => {
+    const {id, score} = ratingInfo;
+    const rate = await fetch(
+        "http://localhost:8080/rating",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                id, score
+            }),
+            headers:{
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("platform-token")}`
+            }
+        }
+    )
+    .then( res => res.json())
+    .catch( error => {
+        console.error(error);
+        return new Error(error);
+    });
+    return (rate instanceof Error ? null : {id, rating: parseInt(score)});
+});
+const mockupsAdapter = createEntityAdapter({
+});
 const initialState = mockupsAdapter.getInitialState({
     status: "idle"
 });
-export const {selectAll, removeAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
+export const {selectAll, selectById, selectIds, removeAll} = mockupsAdapter.getSelectors(state => state.mockupsSlice);
 export const  selectMockups = createSelector(selectAll, (mockups) => mockups);
 const mockupsSlice = createSlice({
     name: "mockups",
@@ -38,11 +61,11 @@ const mockupsSlice = createSlice({
         builder
         .addCase(getMockups.fulfilled, (state = {}, {payload}) => {
             if (payload) {
-                mockupsAdapter.addMany(state, payload);
+                mockupsAdapter.setAll(state, payload);
             }
-        });
+        })
+        .addCase(rating.fulfilled, mockupsAdapter.upsertOne);
         builder.addCase("user/logUserOut/fulfilled", (state = {}) => {
-            console.log("inside lgout part 2");
             mockupsAdapter.removeAll(state);
         });
     }    

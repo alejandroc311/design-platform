@@ -40,9 +40,12 @@ const sessionSlice = createSlice({
         builder
         .addCase(isUserAuthenticated.fulfilled, (state = {}, {payload}) => {
             if (payload){
+                console.log("inside fulfilled is user auth ")
                 return {...state, isUserAuthenticated: true};
             }
-        })
+        }).addCase("user/logUserOut/fulfilled", (state = {}) => {
+            return {...state, isUserAuthenticated: false};
+        });
     }
 });
 export const {throwError} = sessionSlice.actions;

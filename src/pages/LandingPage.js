@@ -5,7 +5,7 @@ import { isUserAuthenticated } from "../store/slicers/sessionSlice";
 function LandingPage(){
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const isAuthenticated = useSelector((state) => state.sessionSlice.isAuthenticated, shallowEqual);
+    const isAuthenticated = useSelector((state) => state.sessionSlice.isUserAuthenticated, shallowEqual);
     useEffect(() => {
         dispatch(isUserAuthenticated());
         isAuthenticated ? navigate("/profile") : navigate("/login");
