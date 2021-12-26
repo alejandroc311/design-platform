@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, createSelector} from "@reduxjs/toolkit";
 import {getMockups} from "./mockupsSlice";
 import { isUserAuthenticated } from "./sessionSlice";
-export const getUser = createAsyncThunk("user/getUser", async (loginData) => {
+export const getUser = createAsyncThunk("user/getUser", async (loginData, {rejectWithValue}) => {
     let {email, password} = loginData;
     let login = await fetch(
         "http://localhost:8080/user",
@@ -19,18 +19,18 @@ export const getUser = createAsyncThunk("user/getUser", async (loginData) => {
     .then(res =>  res.json())
     .catch(error =>  {
         console.error(error);
-        return new Error("Error!", {cause: error})
+        return rejectWithValue(null);
     });
-    //If the server returns an error with "next(error)," 
-    //then login will be assigned a new error object.
-    //If login is an error object, the thunk returns null
-    //and will be handled by the "getUser.fulfilled" case.
-    return (login instanceof Error ? null : login);
+    //If the server returns an error with "next(error)" callback, 
+    //then the thunk will be rejected and will dispatch a "rejected" action that will be handled by the session
+    //slice in order to set a "userCredentialsError."
+    //If the credentials are valid, and a response with a body is sent back from the server, 
+    //then the thunk will dispatch a "fulfilled" action with a the server's response as its payload.
+    return login;
 });
 export const logUserOut = createAsyncThunk("user/logUserOut", async () => {
     return null;
 });
-
 const initialState = {
     id:"",
     proyectId: "",
@@ -42,17 +42,7 @@ const initialState = {
 const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {
-        //logout: (state) => {
-            //localStorage.removeItem("platform-token");
-            //console.log(state);
-            //return {...state, id: "", proyectId: "", accountId: "", mockups: {}, isLoggedIn: false};
-        //},
-        setUser: (state, {payload}) => {
-            const {id, accountId, proyectId} = payload;
-            return {...state, id, accountId, proyectId, isLoggedIn: true};
-        }
-    }, 
+    reducers: {}, 
     extraReducers: (builder) => {
         builder
         .addCase(getUser.fulfilled, (state = {}, {payload}) => {

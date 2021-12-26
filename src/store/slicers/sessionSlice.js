@@ -28,11 +28,11 @@ const sessionSlice = createSlice({
     name:"session",
     initialState:{
         userExistsError: false,
-        isUserAuthenticated: false
+        isUserAuthenticated: false,
+        userCredentialsError: false
     },
     reducers:{
-        throwError: (state, action) => {
-            console.log(action.payload);
+        throwError: (state, {payload}) => {
             return {...state, userExistsError: true};
         }
     },
@@ -40,11 +40,19 @@ const sessionSlice = createSlice({
         builder
         .addCase(isUserAuthenticated.fulfilled, (state = {}, {payload}) => {
             if (payload){
-                console.log("inside fulfilled is user auth ")
+                console.log("Inside fulfilled is user auth ")
                 return {...state, isUserAuthenticated: true};
             }
-        }).addCase("user/logUserOut/fulfilled", (state = {}) => {
-            return {...state, isUserAuthenticated: false};
+        })
+        .addCase("user/logUserOut/fulfilled", (state = {}) => {
+            return {...state, isUserAuthenticated: false, userCredentialsError: false, userExistsError: false};
+        })
+        .addCase("user/getUser/rejected", (state = {}) => {
+            console.log("Inside rejected thunk");
+            return {...state, userCredentialsError: true};
+        })
+        .addCase("user/getUser/fulfilled", (state = {}) => {
+            return {...state, userCredentialsError: false};
         });
     }
 });

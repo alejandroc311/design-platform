@@ -1,5 +1,8 @@
-function EmailInput({onChange, userInput}) {
+import { shallowEqual, useSelector } from "react-redux";
 
+function EmailInput({onChange, userInput}) {
+    const signInError = useSelector((state) => state.sessionSlice.userCredentialsError, shallowEqual);
+    console.log(signInError);
     function handleChange({target: {value, name}}){
         onChange(value, name);
     }
