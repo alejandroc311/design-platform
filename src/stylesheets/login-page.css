@@ -11,6 +11,9 @@
     justify-content: center;
     margin: 0.31250rem 0;
 }
+.form-item p{
+    color: crimson;
+}
 .email-input{
     width: 16rem;
     height: 1.625rem;
@@ -21,6 +24,26 @@
 .email-input:focus{
     outline: none;
     border-color: #000;
+}
+.email-input-signup-error{
+    width: 16rem;
+    height: 1.625rem;
+    border-radius: 1rem;
+    border: solid crimson;
+    padding: 0.500rem;
+}
+.email-input-signup-error:focus{
+    outline: crimson;
+}
+.email-input-signin-error{
+    width: 16rem;
+    height: 1.625rem;
+    border-radius: 1rem;
+    border: solid crimson;
+    padding: 0.500rem;
+}
+.email-input-signin-error{
+    outline: crimson;
 }
 .password-input{
     width: 16rem;

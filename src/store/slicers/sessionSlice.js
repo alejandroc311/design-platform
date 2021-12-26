@@ -52,7 +52,7 @@ const sessionSlice = createSlice({
             return {...state, userCredentialsError: true};
         })
         .addCase("user/getUser/fulfilled", (state = {}) => {
-            return {...state, userCredentialsError: false};
+            return {...state, userCredentialsError: false, userExistsError: false};
         });
     }
 });
