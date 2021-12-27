@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, createSelector} from "@reduxjs/toolkit";
 import {getMockups} from "./mockupsSlice";
-import { isUserAuthenticated } from "./sessionSlice";
 export const getUser = createAsyncThunk("user/getUser", async (loginData, {rejectWithValue}) => {
     let {email, password} = loginData;
     let login = await fetch(
@@ -46,27 +45,20 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(getUser.fulfilled, (state = {}, {payload}) => {
-            let id, accountId, proyectId, accessToken;
-            console.log(payload)
-            if (payload) {
-                ({body:{user:{id, accountId, proyectId}, accessToken}} = payload);
-                localStorage.setItem("platform-token", accessToken);
-                return {...state, id, accountId, proyectId, isLoggedIn: true};
-            }
+            const {body:{user:{id, accountId, proyectId}, accessToken}} = payload;
+            localStorage.setItem("platform-token", accessToken);
+            return {...state, id, accountId, proyectId, isLoggedIn: true};
+            
         })
         .addCase(getMockups.fulfilled, (state = {}, {payload}) => {
             return {...state, mockups: {...state.mockups, ...payload}}
         })
-        .addCase(isUserAuthenticated.fulfilled, (state = {}, {payload}) => {
-            if (payload){
-                const {body:{id, proyectId, accountId}} = payload;
-                console.log(payload);
-                return {...state, id, proyectId, accountId, isLoggedIn: true};
-            }
+        .addCase("session/isUserAuthenticated/fulfilled", (state = {}, {payload}) => {
+            const {body:{id, proyectId, accountId}} = payload;
+            return {...state, id, proyectId, accountId, isLoggedIn: true};
         })
         .addCase(logUserOut.fulfilled, (state = {}) => {
             localStorage.removeItem("platform-token");
-            console.log("Inside logout");
             return {...state, id: "", proyectId: "", accountId: "", mockups: {}, isLoggedIn: false};
         })
     }

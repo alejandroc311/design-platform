@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-export const isUserAuthenticated = createAsyncThunk("session/isUserAuthenticated", async () => {
+export const isUserAuthenticated = createAsyncThunk("session/isUserAuthenticated", async ( arg = {},{rejectWithValue}) => {
     const accessToken = localStorage.getItem("platform-token");
     if (accessToken) {
         const isUserAuthenticated = await fetch(
@@ -18,10 +18,12 @@ export const isUserAuthenticated = createAsyncThunk("session/isUserAuthenticated
         .then(res => res.json())
         .catch(error => {
             console.error(error);
-            return error;
+            return rejectWithValue(null);
         });
-
-        return (isUserAuthenticated instanceof Error ? null : isUserAuthenticated);
+        return isUserAuthenticated;
+    }
+    else {
+        return rejectWithValue(null);
     }
 });
 const sessionSlice = createSlice({
@@ -39,10 +41,11 @@ const sessionSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(isUserAuthenticated.fulfilled, (state = {}, {payload}) => {
-            if (payload){
-                console.log("Inside fulfilled is user auth ")
-                return {...state, isUserAuthenticated: true};
-            }
+            console.log("Inside fulfilled is user auth ")
+            return {...state, isUserAuthenticated: true};
+        })
+        .addCase(isUserAuthenticated.rejected, (state = {}) => {
+            return {...state, isUserAuthenticated: false};
         })
         .addCase("user/logUserOut/fulfilled", (state = {}) => {
             return {...state, isUserAuthenticated: false, userCredentialsError: false, userExistsError: false};
@@ -52,7 +55,7 @@ const sessionSlice = createSlice({
             return {...state, userCredentialsError: true};
         })
         .addCase("user/getUser/fulfilled", (state = {}) => {
-            return {...state, userCredentialsError: false, userExistsError: false};
+            return {...state, userCredentialsError: false};
         });
     }
 });

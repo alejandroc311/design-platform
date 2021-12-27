@@ -5,7 +5,6 @@ function EmailInput({onChange, userInput}) {
     const signUpErrorClass = "email-input-signup-error";
     const signInError = useSelector((state) => state.sessionSlice.userCredentialsError, shallowEqual);
     const signUpError = useSelector((state) => state.sessionSlice.userExistsError, shallowEqual);
-    console.log(signInError);
     function handleChange({target: {value, name}}){
         onChange(value, name);
     }
