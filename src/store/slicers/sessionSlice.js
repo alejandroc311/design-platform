@@ -35,7 +35,7 @@ const sessionSlice = createSlice({
     },
     reducers:{
         throwError: (state, {payload}) => {
-            return {...state, userExistsError: true};
+            return {...state, userExistsError: true, userCredentialsError: false};
         }
     },
     extraReducers: (builder) => {
@@ -52,7 +52,7 @@ const sessionSlice = createSlice({
         })
         .addCase("user/getUser/rejected", (state = {}) => {
             console.log("Inside rejected thunk");
-            return {...state, userCredentialsError: true};
+            return {...state, userCredentialsError: true, userExistsError: false};
         })
         .addCase("user/getUser/fulfilled", (state = {}) => {
             return {...state, userCredentialsError: false};

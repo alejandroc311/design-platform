@@ -12,7 +12,10 @@
     margin: 0.31250rem 0;
 }
 .form-item p{
+    font-style: normal;
+    font-weight: 100;
     color: crimson;
+    
 }
 .email-input{
     width: 16rem;
