@@ -25,9 +25,12 @@ export const getUser = createAsyncThunk("user/getUser", async (loginData, {rejec
     //slice in order to set a "userCredentialsError."
     //If the credentials are valid, and a response with a body is sent back from the server, 
     //then the thunk will dispatch a "fulfilled" action with a the server's response as its payload.
+    const {body:{accessToken}} = login;
+    localStorage.setItem("platform-token", accessToken);
     return login;
 });
 export const logUserOut = createAsyncThunk("user/logUserOut", async () => {
+    localStorage.removeItem("platform-token");
     return null;
 });
 const initialState = {
@@ -45,8 +48,7 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(getUser.fulfilled, (state = {}, {payload}) => {
-            const {body:{user:{id, accountId, proyectId}, accessToken}} = payload;
-            localStorage.setItem("platform-token", accessToken);
+            const {body:{user:{id, accountId, proyectId}}} = payload;
             return {...state, id, accountId, proyectId, isLoggedIn: true};
             
         })
@@ -58,7 +60,6 @@ const userSlice = createSlice({
             return {...state, id, proyectId, accountId, isLoggedIn: true};
         })
         .addCase(logUserOut.fulfilled, (state = {}) => {
-            localStorage.removeItem("platform-token");
             return {...state, id: "", proyectId: "", accountId: "", mockups: {}, isLoggedIn: false};
         })
     }

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-export const isUserAuthenticated = createAsyncThunk("session/isUserAuthenticated", async ( arg = {},{rejectWithValue}) => {
+export const isUserAuthenticated = createAsyncThunk("session/isUserAuthenticated", async (arg = {},{rejectWithValue}) => {
     const accessToken = localStorage.getItem("platform-token");
     if (accessToken) {
         const isUserAuthenticated = await fetch(
@@ -41,7 +41,6 @@ const sessionSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(isUserAuthenticated.fulfilled, (state = {}, {payload}) => {
-            console.log("Inside fulfilled isUserAuthenticated() reducer");
             return {...state, isUserAuthenticated: true};
         })
         .addCase(isUserAuthenticated.rejected, (state = {}) => {

@@ -1,5 +1,4 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from "@reduxjs/toolkit";
-
 export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectId, {rejectWithValue}) => {
     const mockups = await fetch(
         "http://localhost:8080/mockups",
@@ -13,12 +12,12 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
                 "Authorization": `Bearer ${localStorage.getItem("platform-token")}`
             }
         })
-        .then( response => response.json())
+        .then(response => response.json())
         .catch(error => {
             console.error(error);
             return rejectWithValue(null);
         });
-    return mockups.mockups;
+    return (mockups.mockups.length > 0 ? mockups.mockups : rejectWithValue(null));
 });
 export const rating = createAsyncThunk("mockups/rating", async (ratingInfo, {rejectWithValue}) => {
     const {id, score} = ratingInfo;
@@ -35,7 +34,7 @@ export const rating = createAsyncThunk("mockups/rating", async (ratingInfo, {rej
             }
         }
     )
-    .then( res => res.json())
+    .then()
     .catch( error => {
         console.error(error);
         return rejectWithValue(null);
