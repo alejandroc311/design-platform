@@ -41,7 +41,7 @@ const sessionSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(isUserAuthenticated.fulfilled, (state = {}, {payload}) => {
-            console.log("Inside fulfilled is user auth ")
+            console.log("Inside fulfilled isUserAuthenticated() reducer");
             return {...state, isUserAuthenticated: true};
         })
         .addCase(isUserAuthenticated.rejected, (state = {}) => {
@@ -51,7 +51,6 @@ const sessionSlice = createSlice({
             return {...state, isUserAuthenticated: false, userCredentialsError: false, userExistsError: false};
         })
         .addCase("user/getUser/rejected", (state = {}) => {
-            console.log("Inside rejected thunk");
             return {...state, userCredentialsError: true, userExistsError: false};
         })
         .addCase("user/getUser/fulfilled", (state = {}) => {
