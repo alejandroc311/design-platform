@@ -1,7 +1,7 @@
 import "glider-js/glider.min.css";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Glider from "react-glider";
-import { shallowEqual, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectMockups } from "../store/slicers/mockupsSlice";
 import _ from 'underscore';
 import StarRatingComponent from "./StarRatingComponent";

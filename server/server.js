@@ -105,7 +105,6 @@ app.post('/authenticateUser', async (req, res, next) => {
         [, token] = req.headers.authorization.split(' ');
         jwt.verify(token, "secret", (err, decoded) => {
             if (err) throw err;
-            console.log(decoded);
             ({email} = decoded);
         });
         [user] = await getUser(email);
@@ -139,12 +138,12 @@ app.post('/user', async (req, res, next) => {
         next(error);
     }
     finally {
-        const {id, email, proyectId, accountId} = user; 
+        const {id, proyectId, accountId, email} = user; 
         const accessToken = jwt.sign(
             {
                 accountId,
+                id,
                 email, 
-                id, 
                 proyectId
             },
             "secret",
@@ -163,7 +162,7 @@ app.post("/mockups", async (req, res, next) => {
     const {body:{proyectId}} = req;
     const [, token] = req.headers.authorization.split(' ');
     console.log(token);
-    let mockups
+    let mockups;
     try {
         jwt.verify(token, "secret", (err) => {
             if (err) throw err; 
@@ -191,9 +190,8 @@ app.post("/rating", (req, res, next) => {
         connection.execute(
             "UPDATE Mockups SET rating = ? WHERE id = ?",
             [score, id],
-            (error, results) => {
+            (error) => {
                 if (error) throw error;
-                console.log(results);
             }
         );
     }
@@ -219,9 +217,8 @@ app.post("/comment", (req, res, next) => {
         connection.execute(
             "INSERT INTO Comments(proyectId, dateCreated, comment) VALUES(?, NOW(), ?)",
             [proyectId, comment],
-            (error, results) => {
+            (error) => {
                 if (error) throw error;
-                console.log(results);
             }
         );
     }

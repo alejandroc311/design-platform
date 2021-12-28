@@ -4,7 +4,6 @@ import { rating } from '../store/slicers/mockupsSlice';
 import "./../stylesheets/star-rating.css";
 function StarRatingComponent({score, mockupId}){
     let count = 1;
-
     const dispatch = useDispatch();
     function handleClick({currentTarget:{id}}){
         dispatch(rating({id: mockupId, score: id}));

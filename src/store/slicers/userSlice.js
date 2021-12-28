@@ -20,11 +20,6 @@ export const getUser = createAsyncThunk("user/getUser", async (loginData, {rejec
         console.error(error);
         return rejectWithValue(null);
     });
-    //If the server returns an error with "next(error)" callback, 
-    //then the thunk will be rejected and will dispatch a "rejected" action that will be handled by the session
-    //slice in order to set a "userCredentialsError."
-    //If the credentials are valid, and a response with a body is sent back from the server, 
-    //then the thunk will dispatch a "fulfilled" action with a the server's response as its payload.
     const {body:{accessToken}} = login;
     localStorage.setItem("platform-token", accessToken);
     return login;
@@ -58,6 +53,9 @@ const userSlice = createSlice({
         .addCase("session/isUserAuthenticated/fulfilled", (state = {}, {payload}) => {
             const {body:{id, proyectId, accountId}} = payload;
             return {...state, id, proyectId, accountId, isLoggedIn: true};
+        })
+        .addCase("session/isUserAuthenticated/rejected", (state = {}) => {
+            return {...state, id: "", proyectId: "", accountId: "", mockups: {}, isLoggedIn: false};
         })
         .addCase(logUserOut.fulfilled, (state = {}) => {
             return {...state, id: "", proyectId: "", accountId: "", mockups: {}, isLoggedIn: false};

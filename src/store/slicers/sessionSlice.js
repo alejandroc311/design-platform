@@ -31,7 +31,8 @@ const sessionSlice = createSlice({
     initialState:{
         userExistsError: false,
         isUserAuthenticated: false,
-        userCredentialsError: false
+        userCredentialsError: false,
+        isAdminAuthenticated: false
     },
     reducers:{
         throwError: (state, {payload}) => {
