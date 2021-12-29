@@ -21,8 +21,10 @@ function LoginForm({onSubmit}){
             <EmailInput userInput={email} onChange={handleInput}/>
             <PasswordInput userInput={password} onChange={handleInput}/>
             <button className="submit-button" type="submit">Sign In</button>
-            <h3>Or create an account!</h3>
+            <h3>Don't have an account? Sign up!</h3>
             <button onClick={() => navigate("/signup")}>Sign Up</button>
+            <h3>Are you an Admin? Sign in!</h3>
+            <button onClick={() => navigate("/admin")}>Admin Sign In</button>
         </form>
     );
 }

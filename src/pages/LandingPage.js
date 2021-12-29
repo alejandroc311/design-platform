@@ -9,7 +9,7 @@ function LandingPage(){
     const isAdminAuthenticated = useSelector((state) => state.sessionSlice.isAdminAuthenticated, shallowEqual);
     useEffect(() => {
         dispatch(isUserAuthenticated());
-        isAuthenticated ? navigate("/profile") : isAdminAuthenticated ? navigate("/admin") : navigate("/login");
+        isAuthenticated ? navigate("/profile") : isAdminAuthenticated ? navigate("/adminProfile") : navigate("/login");
     },[]);   
     return(
         <div>
