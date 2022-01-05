@@ -17,21 +17,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/images", express.static(usersDir));
 app.options("*", cors());
-const getUser = (email) => new Promise((resolve, reject) => {
-    try {
-        connection.execute(
-            'SELECT * FROM `Users` WHERE `email` = ?',
-            [email],
-            (error, results) => {
-                if (error) throw error;
-                results.length > 0 ? resolve(results) : reject(new Error("Error on Authentication", {cause: "Email is not on records"}));
-            }
-        );
-    }
-    catch (error) {
-        console.error("Error on DB connection", error);
-    }
-});
 const checkForUser = (email) => new Promise((resolve, reject) => {
     try {
         connection.execute(
@@ -70,7 +55,46 @@ const getMockups = (proyectId) => new Promise((resolve, reject) => {
         reject(new Error("Error on DB", error));
     }
 });
-
+const getUser = (email) => new Promise((resolve, reject) => {
+    try {
+        connection.execute(
+            'SELECT * FROM `Users` WHERE `email` = ?',
+            [email],
+            (error, results) => {
+                if (error) throw error;
+                results.length > 0 ? resolve(results) : reject(new Error("Error on Authentication", {cause: "Email is not on records"}));
+            }
+        );
+    }
+    catch (error) {
+        console.error("Error on DB connection", error);
+    }
+});
+app.post('/authenticateUser', async (req, res, next) => {
+    let token, user, email;
+    try{
+        [, token] = req.headers.authorization.split(' ');
+        jwt.verify(token, "secret", (err, decoded) => {
+            if (err) throw err;
+            ({email} = decoded);
+        });
+        [user] = await getUser(email);
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+    finally {
+        const {id, accountId, proyectId} = user;
+        res.json({
+            body:{
+                id,
+                accountId,
+                proyectId,
+            }
+        });
+    }
+});
 app.post('/createUser', async (req, res, next) => {
     const {body:{email, password}} = req;
     console.log(email, password);
@@ -99,33 +123,49 @@ app.post('/createUser', async (req, res, next) => {
         })
     }
 });
-app.post('/authenticateUser', async (req, res, next) => {
-    let token, user, email;
-    try{
-        [, token] = req.headers.authorization.split(' ');
-        jwt.verify(token, "secret", (err, decoded) => {
-            if (err) throw err;
-            ({email} = decoded);
+app.post("/getMockups", async (req, res, next) => {
+    const {body:{proyectId}} = req;
+    const [, token] = req.headers.authorization.split(' ');
+    let mockups;
+    try {
+        jwt.verify(token, "secret", (err) => {
+            if (err) throw err; 
         });
-        [user] = await getUser(email);
+        mockups = await getMockups(proyectId);
     }
     catch (error) {
         console.error(error);
         next(error);
     }
     finally {
-        const {id, accountId, proyectId} = user;
         res.json({
-            body:{
-                id,
-                accountId,
-                proyectId,
-            }
+            mockups    
         });
     }
 });
-
-app.post('/user', async (req, res, next) => {
+app.post("/loginAdmin", async (req, res, next) => {
+    let admin, adminProyects;
+    try {
+        const {body:{email, password}} = req;
+        admin = await getAdmin(email);
+        const {hashedPassword, id} = admin;
+        hashedPassword === password ?  (adminProyects = await getAdminProyects(id)) : new Error("Error on Authentication");    
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+    finally{
+        let accessToken;
+        res.json({
+            body:{
+                accessToken,
+                admin
+            }
+        })
+    }
+});
+app.post('/loginUser', async (req, res, next) => {
     const {body:{email, password}} = req; 
     let user;
     try {
@@ -157,29 +197,7 @@ app.post('/user', async (req, res, next) => {
         });
     }
 });
-
-app.post("/mockups", async (req, res, next) => {
-    const {body:{proyectId}} = req;
-    const [, token] = req.headers.authorization.split(' ');
-    console.log(token);
-    let mockups;
-    try {
-        jwt.verify(token, "secret", (err) => {
-            if (err) throw err; 
-        });
-        mockups = await getMockups(proyectId);
-    }
-    catch (error) {
-        console.error(error);
-        next(error);
-    }
-    finally {
-        res.json({
-            mockups    
-        });
-    }
-});
-app.post("/rating", (req, res, next) => {
+app.post("/setMockupRating", (req, res, next) => {
     let {body: {id, score}} = req;
     score === "" ? score = 0 : score;
     const [, token] = req.headers.authorization.split(' ');
@@ -205,8 +223,7 @@ app.post("/rating", (req, res, next) => {
         })
     }
 });
-
-app.post("/comment", (req, res, next) => {
+app.post("/setProyectComment", (req, res, next) => {
     let {body:{proyectId, comment}} = req;
     console.log(proyectId, comment);
     const [, token] = req.headers.authorization.split(' ');

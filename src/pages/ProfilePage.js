@@ -32,7 +32,7 @@ function ProfilePage() {
     }
     function submitComment(){
         fetch(
-            "http://localhost:8080/comment",
+            "http://localhost:8080/setProyectComment",
             {
                 method: "POST",
                 body: JSON.stringify({

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from "@reduxjs/toolkit";
 export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectId, {rejectWithValue}) => {
     const mockups = await fetch(
-        "http://localhost:8080/mockups",
+        "http://localhost:8080/getMockups",
         {
             method: "POST",
             body: JSON.stringify({
@@ -22,7 +22,7 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
 export const rating = createAsyncThunk("mockups/rating", async (ratingInfo, {rejectWithValue}) => {
     const {id, score} = ratingInfo;
     fetch(
-        "http://localhost:8080/rating",
+        "http://localhost:8080/setMockupRating",
         {
             method: "POST",
             body: JSON.stringify({

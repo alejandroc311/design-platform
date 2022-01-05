@@ -3,7 +3,7 @@ import {getMockups} from "./mockupsSlice";
 export const getUser = createAsyncThunk("user/getUser", async (loginData, {rejectWithValue}) => {
     let {email, password} = loginData;
     let login = await fetch(
-        "http://localhost:8080/user",
+        "http://localhost:8080/loginUser",
         {
             method: "POST",
             headers:{

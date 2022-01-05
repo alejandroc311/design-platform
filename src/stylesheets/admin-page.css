@@ -1,0 +1,10 @@
+#admin-profile{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+table{
+    width: 100%;
+    border: solid 1px black;
+}

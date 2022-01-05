@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import AdminProfilePage from './pages/AdminProfilePage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import { Provider } from 'react-redux';
@@ -22,7 +22,8 @@ ReactDOM.render(
             <PrivateRoute>
               <ProfilePage/>
             </PrivateRoute>  
-          }/>  
+          }/> 
+          <Route path="/adminProfile" element={<AdminProfilePage/>}/> 
         </Routes>
       </Router>
     </Provider>
