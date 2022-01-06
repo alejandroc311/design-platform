@@ -13,6 +13,7 @@ import LandingPage from './pages/LandingPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminProyectDisplay from './components/AdminProyectDisplay';
 import AdminPrivateRoute from './components/AdminPrivateRoute';
+import AdminCommentDisplay from './components/AdminCommentDisplay';
 ReactDOM.render(
     <Provider store={store}>
       <Router>
@@ -34,7 +35,7 @@ ReactDOM.render(
             <Route path=":proyectId" element={
               <div>
                 <AdminProyectDisplay/>
-        
+                <AdminCommentDisplay/>
               </div>
             }/>
           </Route>

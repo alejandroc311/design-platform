@@ -64,6 +64,22 @@ const getAdminProyects = (adminId) => new Promise((resolve, reject) => {
         reject(error); 
     }
 });
+const getComments = (proyectId) => new Promise((resolve, reject) => {
+    try {
+        connection.execute(
+            "SELECT * FROM Comments where proyectId=?",
+            [proyectId],
+            (err, results) => {
+                if(err) throw err;
+                results.length > 0 ? resolve(results) : reject(new Error("No comments yet..."))
+            }
+        );
+    }
+    catch (error) {
+        console.error(error);
+        reject(error);
+    }
+});
 const getMockups = (proyectId) => new Promise((resolve, reject) => {
     let mockups;
     try {
@@ -177,6 +193,29 @@ app.post('/createUser', async (req, res, next) => {
     finally {
         res.json({
             Success: "User Created"
+        })
+    }
+});
+app.post("/getComments", async (req, res, next) => {
+    let comments;
+    const {body:{proyectId}} = req;
+    const [, token] = req.headers.authorization.split(' ');
+    try {
+        jwt.verify(token, "secret", (err) => {
+            if (err) throw err; 
+        });
+        comments = await getComments(proyectId);
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+    finally{
+        console.log(comments);
+        res.json({
+            body:{
+                comments
+            }
         })
     }
 });

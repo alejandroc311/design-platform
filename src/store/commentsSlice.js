@@ -1,4 +1,4 @@
-const { createSlice, createEntityAdapter, createAsyncThunk } = require("@reduxjs/toolkit");
+const { createSlice, createEntityAdapter, createAsyncThunk, createSelector } = require("@reduxjs/toolkit");
 
 export const getComments = createAsyncThunk("comments/getComments", async (proyectId, {rejectWithValue}) => {
     const comments = await fetch(
@@ -19,11 +19,12 @@ export const getComments = createAsyncThunk("comments/getComments", async (proye
         console.error(error);
         return rejectWithValue(null);
     });
+
     console.log(comments);
-    return comments;
+    return comments.body.comments;
 });
 const commentsAdapter = createEntityAdapter({
-    sortComparer: (a, b) => b.dateCreated.localeCompare(a.dateCreated)
+    sortComparer: (a, b) => a.dateCreated.localeCompare(b.dateCreated)
 });
 const initialState = commentsAdapter.getInitialState({
     status: "idle"
@@ -34,7 +35,13 @@ const commentsSlice = createSlice({
     reducers:{},
     extraReducers: (builder) => {
         builder
-        .addCase(getComments.fulfilled, commentsAdapter.setAll);
+        .addCase("comments/getComments/fulfilled", (state = {}, {payload}) => {
+            console.log(payload);
+            commentsAdapter.setAll(state, payload)
+        })
+        .addCase("comments/getComments/rejected", (state ={}) => {commentsAdapter.removeAll(state)});
     }
 });
+export const {selectAll} = commentsAdapter.getSelectors((state = {}) => state.commentsSlice);
+export const selectComments = createSelector(selectAll, (comments) => comments);
 export default commentsSlice.reducer;

@@ -62,7 +62,8 @@ const mockupsSlice = createSlice({
         .addCase(rating.fulfilled, mockupsAdapter.upsertOne)
         .addCase("user/logUserOut/fulfilled", (state = {}) => {
             mockupsAdapter.removeAll(state);
-        });
+        })
+        .addCase(getMockups.rejected, (state = {}) => {mockupsAdapter.removeAll(state)});
     }    
 });
 
