@@ -33,12 +33,20 @@ const adminSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(getAdmin.fulfilled, (state = {}, {payload}) => {
-            const {body:{admin:{id, proyects}}} = payload;
-            return {...state, id, proyects: [...state.proyects, ...proyects]};
+            const {body:{admin:{id}}} = payload;
+            return {...state, id};
         })
         .addCase(getAdmin.rejected, (state = {}) => {
             return {...state, id: "", proyects: []};
         })
+        .addCase("session/isAdminAuthenticated/fulfilled", (state = {}, {payload}) => {
+            const {body:{admin:{id, proyects}}} = payload;
+            console.log(proyects);
+            return {...state, id, proyects: [...proyects]};
+        })
+        .addCase("session/isAdminAuthenticated/rejected", (state = {}) => {
+            return {...state, id: "", proyects: []};
+        });
     }
 });
 

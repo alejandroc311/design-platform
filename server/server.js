@@ -119,8 +119,10 @@ app.post('/authenticateAdmin', async (req, res, next) => {
     finally{
         res.json({
             body:{
-                id, 
-                proyects
+                admin: {
+                    id, 
+                    proyects
+                }
             }
         })
     }

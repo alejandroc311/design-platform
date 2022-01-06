@@ -45,8 +45,9 @@ export const isAdminAuthenticated = createAsyncThunk("session/isAdminAuthenticat
         .then(res => res.json())
         .catch(error => {
             console.error(error);
-            rejectWithValue(null);
+            return rejectWithValue(null);
         });
+        console.log(isAdminAuthenticated);
         return isAdminAuthenticated;
     }
     else {
