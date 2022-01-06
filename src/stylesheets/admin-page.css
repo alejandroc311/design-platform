@@ -7,4 +7,35 @@
 table{
     width: 100%;
     border: solid 1px black;
+    margin-bottom: 1rem;
+}
+th, td {
+    text-align: center;
+    border: solid 1px black;
+    padding: 1rem;
+}
+.carousel-wrapper{
+    padding: 0px 2rem;
+    margin: 0px auto;
+}
+.image-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30rem !important;
+    height: 30rem !important;
+    background-color: honeydew;
+    border:solid;
+    border-color: black;
+}
+.image-card img{
+    width: 25rem;
+    height: 25rem;
+}
+.glider-next{
+    margin-right:-1rem;
+}
+.glider-prev{
+    margin-left: -1rem;
 }

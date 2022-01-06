@@ -11,7 +11,7 @@ function AdminLoginForm({onSubmit}){
         onSubmit(email, password);
         setEmail(""); setPassword("");
     }
-    function handleInput(name, value){
+    function handleInput(value, name){
         name === "email-input" ? setEmail(value) : setPassword(value);
     }
     return(

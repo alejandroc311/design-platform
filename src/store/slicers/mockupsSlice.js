@@ -20,13 +20,13 @@ export const getMockups = createAsyncThunk("mockups/getMockups", async (proyectI
     return (mockups.mockups.length > 0 ? mockups.mockups : rejectWithValue(null));
 });
 export const rating = createAsyncThunk("mockups/rating", async (ratingInfo, {rejectWithValue}) => {
-    const {id, score} = ratingInfo;
+    const {id, score, proyectId} = ratingInfo;
     fetch(
         "http://localhost:8080/setMockupRating",
         {
             method: "POST",
             body: JSON.stringify({
-                id, score
+                id, score, proyectId
             }),
             headers:{
                 "Content-Type": "application/json",

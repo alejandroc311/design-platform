@@ -32,6 +32,38 @@ const checkForUser = (email) => new Promise((resolve, reject) => {
         console.error("Error on DB connection", error);
     }
 });
+const getAdmin = (email) => new Promise((resolve, reject) => {
+    try {
+        connection.execute(
+            'SELECT * FROM `Admins` WHERE `email` = ?',
+            [email],
+            (error, results) => {
+                if (error) throw error;
+                results.length > 0 ? resolve(results) : reject(results);
+            }
+        );
+    }
+    catch (error) {
+        console.error("Error on DB connection: ", error);
+        reject(error);
+    }
+});
+const getAdminProyects = (adminId) => new Promise((resolve, reject) => {
+    try {
+        connection.execute(
+            ' SELECT Proyects.id, Proyects.lastModified, Proyects.userId, Users.email as userEmail, Admins.email as adminEmail FROM Proyects INNER JOIN Users on Proyects.userId=Users.id INNER JOIN Admins on Proyects.adminId=?',
+            [adminId],
+            (error, results) => {
+                if (error) throw error;
+                results.length > 0 ? resolve(results) : reject(new Error("No proyects for this Admin"))
+            }
+        );
+    }
+    catch (error) {
+        console.error("Error on DB connection: ", error);
+        reject(error); 
+    }
+});
 const getMockups = (proyectId) => new Promise((resolve, reject) => {
     let mockups;
     try {
@@ -144,23 +176,40 @@ app.post("/getMockups", async (req, res, next) => {
     }
 });
 app.post("/loginAdmin", async (req, res, next) => {
-    let admin, adminProyects;
+    const {body:{email, password}} = req;
+    let admin, proyects, accessToken;
     try {
-        const {body:{email, password}} = req;
-        admin = await getAdmin(email);
-        const {hashedPassword, id} = admin;
-        hashedPassword === password ?  (adminProyects = await getAdminProyects(id)) : new Error("Error on Authentication");    
+        [admin] = await getAdmin(email);
+        const {id, hashedPassword} = admin;
+        if(hashedPassword === password) {
+            proyects = await getAdminProyects(id);
+            console.table(proyects);
+        }
+        else {
+            throw new Error("Error on Login");
+        }
+
     }
-    catch (error) {
+    catch(error) {
         console.error(error);
         next(error);
     }
     finally{
-        let accessToken;
+        const {id} = admin;
+        accessToken = jwt.sign(
+            {
+                id
+            },
+            "secret",
+            {expiresIn: 60 * 60}
+        );
         res.json({
             body:{
-                accessToken,
-                admin
+                admin:{
+                    id,
+                    proyects
+                },
+                accessToken
             }
         })
     }
@@ -198,16 +247,16 @@ app.post('/loginUser', async (req, res, next) => {
     }
 });
 app.post("/setMockupRating", (req, res, next) => {
-    let {body: {id, score}} = req;
+    let {body: {id, score, proyectId}} = req;
     score === "" ? score = 0 : score;
     const [, token] = req.headers.authorization.split(' ');
     try {
         jwt.verify(token, "secret", (err) => {
             if (err) throw err; 
         });
-        connection.execute(
-            "UPDATE Mockups SET rating = ? WHERE id = ?",
-            [score, id],
+        connection.query(
+            "UPDATE Mockups SET rating = ? WHERE id = ?; UPDATE Proyects SET lastModified = NOW() WHERE id = ?",
+            [score, id, proyectId],
             (error) => {
                 if (error) throw error;
             }
@@ -231,9 +280,9 @@ app.post("/setProyectComment", (req, res, next) => {
         jwt.verify(token, "secret", (err) => {
             if (err) throw err; 
         });
-        connection.execute(
-            "INSERT INTO Comments(proyectId, dateCreated, comment) VALUES(?, NOW(), ?)",
-            [proyectId, comment],
+        connection.query(
+            "INSERT INTO Comments(proyectId, dateCreated, comment) VALUES(?, NOW(), ?); UPDATE Proyects SET lastModified = NOW() WHERE id = ?",
+            [proyectId, comment, proyectId],
             (error) => {
                 if (error) throw error;
             }

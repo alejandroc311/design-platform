@@ -12,21 +12,7 @@ function ProfilePage() {
     const dispatch = useDispatch();
     const mockups = useSelector(selectMockups, _.isEqual);
     const user = useSelector(selectUser, _.isEqual); const {proyectId} = user;
-    const mockupsUrls = mockups.map(({src}) => src);
-    function displayMockups(){
-        return(
-          mockupsUrls.length > 0 ? 
-           <div className="carousel-wrapper">
-             <Carousel/>
-           </div>
-         :
-           <div>
-               <h3>
-                   Oops! Still no mockups for this proyect ... 
-               </h3>
-           </div>
-        );
-    }
+    
     function handleChange({target:{value}}) {
         setComment(value);
     }
@@ -62,7 +48,9 @@ function ProfilePage() {
                 Welcome, User No.{user.id}!
             </h3>
             <button id="logout-button" type="submit" onClick={() => dispatch(logUserOut())} >Logout</button>
-            {displayMockups()}
+            <div className="carousel-wrapper">
+                <Carousel/>
+            </div>
             <div className="comment-section">
                 <label htmlFor="comment-textarea">Comment</label>
                 <textarea className="comment-textarea" placeholder="Leave a comment here ..." value={comment} onChange={handleChange}></textarea>

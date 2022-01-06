@@ -8,16 +8,17 @@ import StarRatingComponent from "./StarRatingComponent";
 function Carousel(){
     const mockups = useSelector(selectMockups, _.isEqual);
     let imageCards = mockups.map((mockup) => {
-        const {src, rating, id} = mockup;
+        const {src, rating, id, proyectId} = mockup;
         return(
             <div key={src} className="slide image-card">
                <img src={src}></img>
-                <StarRatingComponent mockupId={id} score={rating}/>
+                <StarRatingComponent proyectId={proyectId} mockupId={id} score={rating}/>
             </div>
         );
     });
     let carouselRef = useRef(null);
     return(
+        mockups.length > 0 ? 
         <Glider
             ref={carouselRef}
             draggable
@@ -29,6 +30,10 @@ function Carousel(){
         >
             {imageCards}
         </Glider>
+        :
+        <h3>
+            Oops! Still no mockups for this proyect ... 
+        </h3>
     );
 }
 export default Carousel;

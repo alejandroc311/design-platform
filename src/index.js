@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';
 import ProfilePage from './pages/ProfilePage';
 import LandingPage from './pages/LandingPage';
 import AdminLoginPage from './pages/AdminLoginPage';
+import AdminProyectDisplay from './components/AdminProyectDisplay';
 ReactDOM.render(
     <Provider store={store}>
       <Router>
@@ -23,7 +24,9 @@ ReactDOM.render(
               <ProfilePage/>
             </PrivateRoute>  
           }/> 
-          <Route path="/adminProfile" element={<AdminProfilePage/>}/> 
+          <Route path="/adminProfile" element={<AdminProfilePage/>}>
+            <Route path=":proyectId" element={<AdminProyectDisplay/>}/>
+          </Route> 
         </Routes>
       </Router>
     </Provider>
