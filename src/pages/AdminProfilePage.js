@@ -4,7 +4,6 @@ import "./../stylesheets/admin-page.css";
 function AdminProfilePage(){
     const navigate = useNavigate();
     const admin = useSelector((state = {}) => state.adminSlice, shallowEqual);
-    console.log(admin);
     let {id, proyects} = admin;
     const adminProyectsTableRow = proyects.map(({id, userEmail, userId, lastModified}) => {
         return(
@@ -33,6 +32,7 @@ function AdminProfilePage(){
         <div>
             <div id="admin-profile">
             <h1>Admin Profile</h1>
+            <h3>Welcome Admin No. {id}!</h3>
             <table className="proyects-table">
                 <thead>
                 <tr>

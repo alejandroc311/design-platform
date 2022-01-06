@@ -41,7 +41,6 @@ const adminSlice = createSlice({
         })
         .addCase("session/isAdminAuthenticated/fulfilled", (state = {}, {payload}) => {
             const {body:{admin:{id, proyects}}} = payload;
-            console.log(proyects);
             return {...state, id, proyects: [...proyects]};
         })
         .addCase("session/isAdminAuthenticated/rejected", (state = {}) => {

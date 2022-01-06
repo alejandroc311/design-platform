@@ -6,11 +6,9 @@ import { getMockups } from "../store/slicers/mockupsSlice";
 import _ from 'underscore';
 
 function AdminProyectDisplay () {
-    
     const dispatch = useDispatch();
     const {proyectId} = useParams();
     useEffect(() => {
-        console.log(proyectId);
         dispatch(getMockups(proyectId))
     }, [proyectId]);
     return(
