@@ -14,6 +14,7 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminProyectDisplay from './components/AdminProyectDisplay';
 import AdminPrivateRoute from './components/AdminPrivateRoute';
 import AdminCommentDisplay from './components/AdminCommentDisplay';
+import AdminMockupUploadComponent from './components/AdminMockupUploadComponent';
 ReactDOM.render(
     <Provider store={store}>
       <Router>
@@ -34,6 +35,7 @@ ReactDOM.render(
           }>
             <Route path=":proyectId" element={
               <div>
+                <AdminMockupUploadComponent/>
                 <AdminProyectDisplay/>
                 <AdminCommentDisplay/>
               </div>
