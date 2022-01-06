@@ -102,6 +102,29 @@ const getUser = (email) => new Promise((resolve, reject) => {
         console.error("Error on DB connection", error);
     }
 });
+app.post('/authenticateAdmin', async (req, res, next) => {
+    let token, proyects, id;
+    try {
+        [, token] = req.headers.authorization.split(' ');
+        jwt.verify(token, "secret", (err, decoded) => {
+            if (err) throw err;
+            ({id} = decoded);
+        });
+        proyects = await getAdminProyects(id);
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+    finally{
+        res.json({
+            body:{
+                id, 
+                proyects
+            }
+        })
+    }
+});
 app.post('/authenticateUser', async (req, res, next) => {
     let token, user, email;
     try{
