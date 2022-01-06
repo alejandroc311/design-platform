@@ -28,7 +28,7 @@ function AdminCommentDisplay(){
     return(
         <div className="comment-container">
             <h1>User's Comments</h1>
-            {commentDisplay}
+            {commentDisplay.length > 0 ? commentDisplay : <h3>No comments yet ...</h3>}
         </div>
     );
 }
