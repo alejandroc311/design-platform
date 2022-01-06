@@ -56,11 +56,10 @@ function AdminProfilePage(){
                 <tbody>
                     {adminProyectsTableRow}
                 </tbody>
-            </table>
-            
+            </table> 
         </div>
         <Outlet/>
-        </div>
+    </div>
         
     );
 }
