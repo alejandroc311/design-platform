@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getComments, selectComments } from "../store/commentsSlice";
+import { getComments, selectComments } from "../store/slicers/commentsSlice";
 import _ from 'underscore';
 function AdminCommentDisplay(){
     const dispatch = useDispatch();
