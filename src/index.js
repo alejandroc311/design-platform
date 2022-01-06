@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AdminProfilePage from './pages/AdminProfilePage';
+import App from "./App"
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import { Provider } from 'react-redux';
@@ -31,7 +32,10 @@ ReactDOM.render(
           </AdminPrivateRoute>
           }>
             <Route path=":proyectId" element={
-              <AdminProyectDisplay/>
+              <div>
+                <AdminProyectDisplay/>
+        
+              </div>
             }/>
           </Route>
         </Routes>
