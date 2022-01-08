@@ -4,8 +4,9 @@ const express = require("express");
 const app = express();
 const mysql = require("mysql2");
 const path = require("path");
-const usersDir = path.join(__dirname, "public/users");
+const usersDir = path.join(__dirname, "public/proyects");
 const jwt = require('jsonwebtoken');
+const fileUpload = require("express-fileupload");
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -15,6 +16,7 @@ const connection = mysql.createConnection({
 });
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload())
 app.use("/images", express.static(usersDir));
 app.options("*", cors());
 const checkForUser = (email) => new Promise((resolve, reject) => {
@@ -360,6 +362,44 @@ app.post("/setProyectComment", (req, res, next) => {
         res.json({
             result: "success"
         })
+    }
+});
+app.post("/uploadMockups", async (req, res, next) => {
+    let uploadPath, fileNames = [];
+    try{
+        const {body:{proyectId}} = req;
+        const [, token] = req.headers.authorization.split(' ');
+        jwt.verify(token, "secret", (err) => {
+            if (err) throw err;
+        });
+        for (const [, value] of Object.entries(req.files)) {
+            uploadPath = `${usersDir}/${proyectId}/${value.name}`;
+            fileNames = [...fileNames, value.name];
+            value.mv(uploadPath, (err) => {
+                if (err) throw err;
+            });
+        }
+        const values = fileNames.map((fileName) => {
+            const src = `http://localhost:8080/images/${proyectId}/${fileName}`;
+            return [proyectId, src];
+        });
+        console.log("Inside fileNames", fileNames)
+        connection.query(
+            `INSERT INTO Mockups(proyectId, src) VALUES ?; UPDATE Proyects SET lastModified = NOW() WHERE id = ?`,
+            [values, proyectId],
+            (err) => {
+                if (err) throw err;
+            }
+        );
+    }
+    catch(error){
+        console.error(error);
+        next(error);
+    }
+    finally{
+        res.json({
+            result: "success"
+        });
     }
 });
 

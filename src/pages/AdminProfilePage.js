@@ -1,7 +1,9 @@
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { logUserOut } from "../store/slicers/userSlice";
 import "./../stylesheets/admin-page.css";
 function AdminProfilePage(){
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const admin = useSelector((state = {}) => state.adminSlice, shallowEqual);
     let {id, proyects} = admin;
@@ -33,6 +35,9 @@ function AdminProfilePage(){
             <div id="admin-profile">
             <h1>Admin Profile</h1>
             <h3>Welcome Admin No. {id}!</h3>
+            <h4>Logout</h4>
+            <button id="admin-logout-button"onClick={() => dispatch(logUserOut())}>Logout</button>
+            <h4>Proyects assigned to Admin No. {id}</h4>
             <table className="proyects-table">
                 <thead>
                 <tr>

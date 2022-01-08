@@ -45,7 +45,11 @@ const adminSlice = createSlice({
         })
         .addCase("session/isAdminAuthenticated/rejected", (state = {}) => {
             return {...state, id: "", proyects: []};
+        })
+        .addCase("user/logUserOut/fulfilled", (state = {}) => {
+            return {...state, id: "", proyects:[]};
         });
+        
     }
 });
 

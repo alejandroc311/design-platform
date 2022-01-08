@@ -17,11 +17,9 @@
     width: 25rem;
     height: 25rem;
 }
-.glider-next{
-    margin-right:-1rem;
-}
-.glider-prev{
-    margin-left: -1rem;
+.carousel-item{
+    display: flex;
+    padding-bottom: 1rem;
 }
 .comment-section{
     display: flex;

@@ -4,6 +4,12 @@
     justify-content: center;
     align-items: center;
 }
+#admin-profile, h4{
+    align-self: flex-start;
+}
+#admin-profile, #admin-logout-button{
+    align-self: flex-start;
+}
 #admin-upload{
     margin-bottom: 1rem;
 }
@@ -34,11 +40,12 @@ th, td {
     padding: 1rem;
     margin: 1rem;
 }
-.carousel-wrapper{
-    padding: 0px 3rem;
-    margin: 0px auto;
+.carousel-item{
+    display: flex;
+    padding-bottom: 1rem;
 }
 .image-card{
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,9 +60,8 @@ th, td {
     width: 25rem;
     height: 25rem;
 }
-.glider-next{
-    margin-right:-1rem;
-}
-.glider-prev{
-    margin-left: -1rem;
+#proyect-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import Carousel from "./Carousel";  
-import { useDispatch, useSelector } from "react-redux";
+import CarouselDisplay from "./Carousel";  
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getMockups } from "../store/slicers/mockupsSlice";
 import _ from 'underscore';
@@ -12,9 +12,18 @@ function AdminProyectDisplay () {
         dispatch(getMockups(proyectId))
     }, [proyectId]);
     return(
-        <div className="carousel-wrapper">
-            <Carousel/>
+        <div>
+            <div id="proyect-header">
+            <h1>
+                Proyect No. {proyectId}
+            </h1>    
+            </div>   
+            
+            <div className="carousel-wrapper">
+                <CarouselDisplay/>
+            </div>
         </div>
+        
     );
 }
 export default AdminProyectDisplay;

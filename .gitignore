@@ -5,7 +5,7 @@
 /.pnp
 .pnp.js
 .vscode
-/server/public/users/*
+/server/public/proyects/*
 *.sql
 
 # testing
