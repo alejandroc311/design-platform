@@ -111,4 +111,4 @@ Once you have either installed the Workbench or logged in to the MySQL server th
     END
     
 # Future features
-Add a contract signing requirement for when the user creates an account. Also, add a stripe checkout for 25% deposit right before account creation. 
+Add a contract signing requirement for when the user creates an account. Also, add a stripe checkout for 25% deposit right before account creation. Finally, add a mechanism through which admins can delete clients and their proyects. 
