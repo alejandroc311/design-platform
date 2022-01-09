@@ -10,7 +10,7 @@ const fileUpload = require("express-fileupload");
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "gohanssj2",
+    password: "",
     multipleStatements: true,
     database: "Tropiweb_Platform"
 });
@@ -383,7 +383,6 @@ app.post("/uploadMockups", async (req, res, next) => {
             const src = `http://localhost:8080/images/${proyectId}/${fileName}`;
             return [proyectId, src];
         });
-        console.log("Inside fileNames", fileNames)
         connection.query(
             `INSERT INTO Mockups(proyectId, src) VALUES ?; UPDATE Proyects SET lastModified = NOW() WHERE id = ?`,
             [values, proyectId],
