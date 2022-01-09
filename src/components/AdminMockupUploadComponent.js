@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getMockups } from "../store/slicers/mockupsSlice";
+
 
 function AdminMockupUploadComponent(){
     const {proyectId} = useParams();
@@ -33,7 +32,6 @@ function AdminMockupUploadComponent(){
         setFiles(files);
     }
     useEffect(() => {
-        console.log(files);
     }, [proyectId, files]);
     return(
         <form id="admin-upload"  encType="multipart/form-data" onSubmit={handleSubmit}>

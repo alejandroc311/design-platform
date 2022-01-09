@@ -19,8 +19,6 @@ export const getComments = createAsyncThunk("comments/getComments", async (proye
         console.error(error);
         return rejectWithValue(null);
     });
-
-    console.log(comments);
     return comments.body.comments;
 });
 const commentsAdapter = createEntityAdapter({
@@ -36,7 +34,6 @@ const commentsSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase("comments/getComments/fulfilled", (state = {}, {payload}) => {
-            console.log(payload);
             commentsAdapter.setAll(state, payload)
         })
         .addCase("comments/getComments/rejected", (state ={}) => {commentsAdapter.removeAll(state)});
